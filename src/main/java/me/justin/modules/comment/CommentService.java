@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CommentService {
 
-    private final static String[] SCHOOL_NAME_ENDS_WITH_ARRAY = {"중", "고", "학교", "중학", "고등", "중학교", "고등학", "고등학교"};
+    private final static String[] SCHOOL_NAME_ENDS_WITH_ARRAY = {"고등학교", "중학교", "고등학", "고등", "중학", "중", "고", "학교"};
 
     private final CsvService csvService = CsvService.getInstance();
     private final SchoolService schoolService = SchoolService.getInstance();
@@ -32,10 +32,16 @@ public class CommentService {
         for (String[] strings : commentReaderReadCSV) {
             String[] words = strings[0].split(" ");
             for (String word : words) {
-                Arrays.stream(SCHOOL_NAME_ENDS_WITH_ARRAY)
-                        .filter(s -> word.endsWith(s) && schoolService.existByName(word))
-                        .map(s -> schoolService.findByName(word))
-                        .forEach(School::addCount);
+                boolean isSchoolName = false;
+                for (String s : SCHOOL_NAME_ENDS_WITH_ARRAY) {
+                    if (word.endsWith(s) && schoolService.existByName(word)) {
+                        School school = schoolService.findByName(word);
+                        school.addCount();
+                        isSchoolName = true;
+                        break;
+                    }
+                }
+                if(isSchoolName) break;
             }
         }
     }
