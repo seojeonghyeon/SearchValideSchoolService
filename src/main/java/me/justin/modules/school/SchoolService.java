@@ -35,6 +35,8 @@ public class SchoolService {
         return schoolRepository.findAllWithoutCountZero();
     }
 
+    public List<School> findAll(){return schoolRepository.findAll();}
+
     public void saveSchoolList(){
         CsvReader highSchoolReader = csvService.createHighSchoolReader();
         CsvReader middleSchoolReader = csvService.createMiddleSchoolReader();
@@ -43,7 +45,7 @@ public class SchoolService {
         saveSchoolList(middleSchoolReader.getReadCSV());
     }
 
-    private void saveSchoolList(List<String[]> schoolList){
+    public void saveSchoolList(List<String[]> schoolList){
         schoolList.forEach(strings -> save(School.createSchool(strings[0])));
     }
 

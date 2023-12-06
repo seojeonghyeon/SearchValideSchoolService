@@ -9,8 +9,8 @@ import static org.assertj.core.api.Assertions.*;
 class CsvServiceTest {
 
     private final static String COMMENTS_CONTENT = "         ";
-    private final static String HIGH_SCHOOL_NAME = "국립국악고등학교";
-    private final static String MIDDLE_SCHOOL_NAME = "서울대학교사범대학부설중학교";
+    private final static String HIGH_SCHOOL_NAME = "국립국악고";
+    private final static String MIDDLE_SCHOOL_NAME = "서울대학교사범대학부설중";
 
     private CsvService csvService;
 

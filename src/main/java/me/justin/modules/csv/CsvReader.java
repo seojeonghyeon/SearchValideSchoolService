@@ -40,9 +40,12 @@ public class CsvReader {
     }
 
     private void addLineContents(String line){
-        String replacement = fileName.endsWith("_학교명.csv") ? "" : " ";
+        boolean isHighSchoolFile = fileName.endsWith("고등학교_학교명.csv");
+        boolean isMiddleSchoolFile = fileName.endsWith("중학교_학교명.csv");
+        String replacement = isHighSchoolFile || isMiddleSchoolFile ? "" : " ";
+        String regex = isMiddleSchoolFile || isHighSchoolFile ? isHighSchoolFile ? "등학교" : "학교" : "[^가-힣\\s]";
         String[] lineContents = line
-                .replaceAll("[^가-힣\\s]", replacement)
+                .replaceAll(regex, replacement)
                 .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         this.readCSV.add(lineContents);
     }
