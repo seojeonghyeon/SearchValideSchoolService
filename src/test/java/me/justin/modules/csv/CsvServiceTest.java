@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class CsvServiceTest {
 
-    private final static String COMMENTS_CONTENT = " message ";
+    private final static String COMMENTS_CONTENT = "         ";
     private final static String HIGH_SCHOOL_NAME = "국립국악고등학교";
     private final static String MIDDLE_SCHOOL_NAME = "서울대학교사범대학부설중학교";
 
@@ -26,7 +26,7 @@ class CsvServiceTest {
         assertThat(true).isEqualTo(csvService == otherCsvService);
     }
 
-    @DisplayName("Comments CSV 읽기 여부 확인")
+    @DisplayName("Comments CSV 읽기 여부 확인 - 한글과 띄어 쓰기만 남김")
     @Test
     void createCommentsReader() {
         CsvReader csvReader = csvService.createCommentsReader();

@@ -19,4 +19,8 @@ public class School {
     public void addCount(){
         this.count++;
     }
+
+    public String toString() {
+        return name + "\t" + count;
+    }
 }

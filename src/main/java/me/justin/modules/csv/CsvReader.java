@@ -35,12 +35,16 @@ public class CsvReader {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.fileName), StandardCharsets.UTF_8));
         String line = null;
         while ((line = bufferedReader.readLine()) != null) {
-            String replacement = fileName.endsWith("_학교명.csv") ? "" : " ";
-            String[] lineContents = line
-                    .replaceAll("[^a-zA-Z0-9가-힣\\s]", replacement)
-                    .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-            this.readCSV.add(lineContents);
+            addLineContents(line);
         }
+    }
+
+    private void addLineContents(String line){
+        String replacement = fileName.endsWith("_학교명.csv") ? "" : " ";
+        String[] lineContents = line
+                .replaceAll("[^가-힣\\s]", replacement)
+                .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+        this.readCSV.add(lineContents);
     }
 
     public String[] nextRead(){

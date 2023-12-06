@@ -1,9 +1,13 @@
 package me.justin.modules.school;
 
+import me.justin.modules.csv.CsvReader;
+import me.justin.modules.csv.CsvService;
+
 import java.util.List;
 
 public class SchoolService {
     private final SchoolRepository schoolRepository = SchoolRepository.getInstance();
+    private final CsvService csvService = CsvService.getInstance();
 
     private SchoolService(){}
 
@@ -31,7 +35,15 @@ public class SchoolService {
         return schoolRepository.findAllWithoutCountZero();
     }
 
-    public void saveSchoolList(List<String[]> schoolList){
+    public void saveSchoolList(){
+        CsvReader highSchoolReader = csvService.createHighSchoolReader();
+        CsvReader middleSchoolReader = csvService.createMiddleSchoolReader();
+
+        saveSchoolList(highSchoolReader.getReadCSV());
+        saveSchoolList(middleSchoolReader.getReadCSV());
+    }
+
+    private void saveSchoolList(List<String[]> schoolList){
         schoolList.forEach(strings -> save(School.createSchool(strings[0])));
     }
 

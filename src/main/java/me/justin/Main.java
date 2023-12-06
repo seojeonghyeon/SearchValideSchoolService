@@ -1,9 +1,12 @@
 package me.justin;
 
+import me.justin.modules.MainController;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("hi");
+        MainController mainController = MainController.getInstance();
+        mainController.main();
     }
 
 }
