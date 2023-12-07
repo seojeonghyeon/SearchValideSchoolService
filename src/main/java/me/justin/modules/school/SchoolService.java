@@ -45,8 +45,8 @@ public class SchoolService {
         saveSchoolList(middleSchoolReader.getReadCSV());
     }
 
-    public void saveSchoolList(List<String[]> schoolList){
-        schoolList.forEach(strings -> save(School.createSchool(strings[0])));
+    public void saveSchoolList(List<String> schoolList){
+        schoolList.forEach(str -> save(School.createSchool(str)));
     }
 
 }

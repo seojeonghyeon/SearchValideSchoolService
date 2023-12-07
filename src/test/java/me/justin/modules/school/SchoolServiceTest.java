@@ -75,7 +75,7 @@ class SchoolServiceTest {
     @Test
     void saveSchoolList() {
         CsvReader csvReader = csvService.createHighSchoolReader();
-        schoolService.saveSchoolList(csvReader.getReadCSV());
+        schoolService.saveSchoolList(csvReader.getSchoolNameList());
         School findSchool = schoolService.findByName(HIGH_SCHOOL_NAME);
         assertThat(true).isEqualTo(HIGH_SCHOOL_NAME.equals(findSchool.getName()));
     }

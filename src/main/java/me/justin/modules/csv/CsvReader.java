@@ -1,6 +1,8 @@
 package me.justin.modules.csv;
 
 import lombok.*;
+import me.justin.modules.comment.Comment;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class CsvReader {
 
     private String fileName;
     private int index;
-    private List<String[]> readCSV;
+    private List<String> readCSV;
 
     public static CsvReader createCsvReader(String fileName) {
         CsvReader csvReader = new CsvReader();
@@ -33,29 +35,73 @@ public class CsvReader {
             return;
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.fileName), StandardCharsets.UTF_8));
+        boolean isSchoolFile = fileName.endsWith("학교_학교명.csv");
+
+        if(isSchoolFile){
+            addLineContentsAboutSchool(bufferedReader);
+            return;
+        }
+        addLineContentsAboutComments(bufferedReader);
+    }
+
+    private void addLineContentsAboutSchool(BufferedReader bufferedReader) throws IOException{
         String line = null;
         while ((line = bufferedReader.readLine()) != null) {
-            addLineContents(line);
+            String replacement = "";
+            String regex = fileName.endsWith("고등학교_학교명.csv") ? "등학교" : "학교";
+            String lineContents = line.replaceAll(regex, replacement);
+            this.readCSV.add(lineContents);
+        }
+    }
+    private void addLineContentsAboutComments(BufferedReader bufferedReader) throws IOException{
+        Comment comment = Comment.createComment();
+        String line = null;
+        while ((line = bufferedReader.readLine()) != null) {
+            translateComments(line, comment);
         }
     }
 
-    private void addLineContents(String line){
-        boolean isHighSchoolFile = fileName.endsWith("고등학교_학교명.csv");
-        boolean isMiddleSchoolFile = fileName.endsWith("중학교_학교명.csv");
-        String replacement = isHighSchoolFile || isMiddleSchoolFile ? "" : " ";
-        String regex = isMiddleSchoolFile || isHighSchoolFile ? isHighSchoolFile ? "등학교" : "학교" : "[^가-힣\\s]";
-        String[] lineContents = line
-                .replaceAll(regex, replacement)
-                .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-        this.readCSV.add(lineContents);
+    private void translateComments(String line, Comment comment){
+        String replacement = "";
+        String regex = "[^가-힣\\s\"]";
+        boolean isExistTwoDoubleQuotesInOneLine = line.contains("\"") && line.codePoints().filter(ch -> ch == "\"".codePointAt(0)).count() % 2 == 0;
+        if(isExistTwoDoubleQuotesInOneLine){
+            regex = "[^가-힣\s]";
+        }
+        String str = line.replaceAll(regex, replacement);
+
+        if(isExistTwoDoubleQuotesInOneLine){
+//            String[] lineContents = str
+//                    .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            this.readCSV.add(str);
+            comment.initStringBuffer();
+            comment.setFalseExistDoubleQuotes();
+        }else if(str.contains("\"") && !comment.isExistDoubleQuotes()){
+            comment.getStringBuffer().append(str);
+            comment.setTrueExistDoubleQuotes();
+            return;
+        }else if(str.contains("\"") && comment.isExistDoubleQuotes()){
+            comment.getStringBuffer().append(str);
+            comment.setFalseExistDoubleQuotes();
+            str = comment.getStringBuffer().toString();
+            comment.initStringBuffer();
+        }else if(!str.contains("\"") && comment.isExistDoubleQuotes()){
+            comment.getStringBuffer().append(str);
+            str = comment.getStringBuffer().toString();
+            return;
+        }
+//        String[] lineContents = str
+//                .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+        this.readCSV.add(str);
+        comment.initStringBuffer();
     }
 
-    public String[] nextRead(){
-        if(readCSV.size() == index){
-            return null;
-        }
-        return readCSV.get(index++);
-    }
+//    public String[] nextRead(){
+//        if(readCSV.size() == index){
+//            return null;
+//        }
+//        return readCSV.get(index++);
+//    }
 
     private static boolean hasText(String str){
         return str != null && !str.isEmpty() && containsText(str);

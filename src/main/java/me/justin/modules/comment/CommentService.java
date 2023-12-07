@@ -25,11 +25,15 @@ public class CommentService {
 
     public void extractSchoolNameFromCSV(){
         CsvReader commentReader = csvService.createCommentsReader();
-        List<String[]> commentReaderReadCSV = commentReader.getReadCSV();
+        List<String> commentReaderReadCSV = commentReader.getReadCSV();
         List<School> schoolList = schoolService.findAll();
         for (School school : schoolList) {
-            for (String[] strings : commentReaderReadCSV) {
-                if (strings[0].contains(school.getName())){
+            for (String str : commentReaderReadCSV) {
+                if (str.contains(school.getName())){
+                    int index = str.indexOf(school.getName());
+                    if (index >= 1 && str.charAt(index-1)!=' ' && index >=2 && str.charAt(index-2)==' '){
+                            continue;
+                    }
                     school.addCount();
                 }
             }

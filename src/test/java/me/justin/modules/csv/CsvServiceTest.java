@@ -30,23 +30,20 @@ class CsvServiceTest {
     @Test
     void createCommentsReader() {
         CsvReader csvReader = csvService.createCommentsReader();
-        String[] getNext = csvReader.nextRead();
-        assertThat(COMMENTS_CONTENT).isEqualTo(getNext[0]);
+        assertThat(COMMENTS_CONTENT).isEqualTo(csvReader.getReadCSV().get(0));
     }
 
     @DisplayName("High School List CSV 읽기 여부 확인")
     @Test
     void createHighSchoolReader() {
         CsvReader csvReader = csvService.createHighSchoolReader();
-        String[] getNext = csvReader.nextRead();
-        assertThat(HIGH_SCHOOL_NAME).isEqualTo(getNext[0]);
+        assertThat(HIGH_SCHOOL_NAME).isEqualTo(csvReader.getReadCSV().get(0));
     }
 
     @DisplayName("Middle School List CSV 읽기 여부 확인")
     @Test
     void createMiddleSchoolReader() {
         CsvReader csvReader = csvService.createMiddleSchoolReader();
-        String[] getNext = csvReader.nextRead();
-        assertThat(MIDDLE_SCHOOL_NAME).isEqualTo(getNext[0]);
+        assertThat(MIDDLE_SCHOOL_NAME).isEqualTo(csvReader.getReadCSV().get(0));
     }
 }
