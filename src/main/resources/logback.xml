@@ -1,5 +1,5 @@
 <configuration>
-    <property name="logPath" value="target/classes/log"/>
+    <property name="logPath" value="output"/>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${logPath}/result.log</file>
         <encoder>

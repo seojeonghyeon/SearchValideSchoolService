@@ -8,7 +8,7 @@ import java.util.List;
 @Slf4j
 public class TextService {
 
-    private final static String TEXT_FILE_NAME = "target/classes/text/result.txt";
+    private final static String TEXT_FILE_NAME = "output/result.txt";
 
     private TextService(){}
 

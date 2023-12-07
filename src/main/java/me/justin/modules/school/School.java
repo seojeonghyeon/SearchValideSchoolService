@@ -21,11 +21,12 @@ public class School {
     }
 
     public String toString() {
+        StringBuilder builder = new StringBuilder();
         if(name.endsWith("고")) {
-            return name + "등학교"+ "\t" + count;
+            return builder.append(name).append("등학교").append("\t").append(count).toString();
         }else if(name.endsWith("중")){
-            return name + "학교" + "\t" + count;
+            return builder.append(name).append("학교").append("\t").append(count).toString();
         }
-        return name + "\t" + count;
+        return builder.append(name).append("\t").append(count).toString();
     }
 }
