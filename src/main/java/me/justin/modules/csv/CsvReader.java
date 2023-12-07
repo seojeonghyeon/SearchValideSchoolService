@@ -63,8 +63,10 @@ public class CsvReader {
 
     private void translateComments(String line, Comment comment){
         String replacement = "";
+        String doubleQuotes = "\"";
         String regex = "[^가-힣\\s\"]";
-        boolean isExistTwoDoubleQuotesInOneLine = line.contains("\"") && line.codePoints().filter(ch -> ch == "\"".codePointAt(0)).count() % 2 == 0;
+        boolean isExistTwoDoubleQuotesInOneLine = line.contains("\"") && line.codePoints().filter(ch -> ch == doubleQuotes.codePointAt(0)).count() % 2 == 0;
+
         if(isExistTwoDoubleQuotesInOneLine){
             regex = "[^가-힣\s]";
         }
@@ -74,16 +76,16 @@ public class CsvReader {
             this.readCSV.add(str);
             comment.initStringBuffer();
             comment.setFalseExistDoubleQuotes();
-        }else if(str.contains("\"") && !comment.isExistDoubleQuotes()){
+        }else if(str.contains(doubleQuotes) && !comment.isExistDoubleQuotes()){
             comment.getStringBuffer().append(str);
             comment.setTrueExistDoubleQuotes();
             return;
-        }else if(str.contains("\"") && comment.isExistDoubleQuotes()){
+        }else if(str.contains(doubleQuotes) && comment.isExistDoubleQuotes()){
             comment.getStringBuffer().append(str);
             comment.setFalseExistDoubleQuotes();
             str = comment.getStringBuffer().toString();
             comment.initStringBuffer();
-        }else if(!str.contains("\"") && comment.isExistDoubleQuotes()){
+        }else if(!str.contains(doubleQuotes) && comment.isExistDoubleQuotes()){
             comment.getStringBuffer().append(str);
             str = comment.getStringBuffer().toString();
             return;

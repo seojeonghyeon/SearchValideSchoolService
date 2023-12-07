@@ -3,6 +3,7 @@ package me.justin.modules;
 import me.justin.modules.comment.CommentService;
 import me.justin.modules.school.School;
 import me.justin.modules.school.SchoolService;
+import me.justin.modules.text.TextService;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class MainController {
 
     private final CommentService commentService = CommentService.getInstance();
     private final SchoolService schoolService = SchoolService.getInstance();
+    private final TextService textService = TextService.getInstance();
 
     private MainController(){}
 
@@ -21,11 +23,11 @@ public class MainController {
         return MainControllerHelper.MAIN_CONTROLLER;
     }
 
-    public void main(){
+    public void writeTextFile(){
         schoolService.saveSchoolList();
         commentService.extractSchoolNameFromCSV();
         List<School> schoolList = schoolService.findAllWithoutCountZero();
-        schoolList.forEach(school -> System.out.println(school.toString()));
+        textService.writeTextFile(schoolList);
     }
 
 }

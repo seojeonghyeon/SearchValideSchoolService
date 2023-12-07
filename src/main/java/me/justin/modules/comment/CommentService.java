@@ -5,8 +5,6 @@ import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
 import me.justin.modules.school.School;
 import me.justin.modules.school.SchoolService;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class CommentService {
@@ -38,6 +36,6 @@ public class CommentService {
             boolean isOtherMean = index >= 1 && str.charAt(index-1)!=' ' && index >=2 && str.charAt(index-2)==' ';
             return !isOtherMean;
         }
-        return true;
+        return false;
     }
 }
