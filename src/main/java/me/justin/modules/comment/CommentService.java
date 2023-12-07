@@ -27,17 +27,17 @@ public class CommentService {
         CsvReader commentReader = csvService.createCommentsReader();
         List<String> commentReaderReadCSV = commentReader.getReadCSV();
         List<School> schoolList = schoolService.findAll();
-        for (School school : schoolList) {
-            for (String str : commentReaderReadCSV) {
-                if (str.contains(school.getName())){
-                    int index = str.indexOf(school.getName());
-                    if (index >= 1 && str.charAt(index-1)!=' ' && index >=2 && str.charAt(index-2)==' '){
-                            continue;
-                    }
-                    school.addCount();
-                }
-            }
-        }
+        schoolList.forEach(school -> {
+            commentReaderReadCSV.stream().filter(str -> isEqualsToSchoolName(str, school.getName())).forEach(str -> school.addCount());
+        });
     }
 
+    public boolean isEqualsToSchoolName(String str, String schoolName){
+        if (str.contains(schoolName)){
+            int index = str.indexOf(schoolName);
+            boolean isOtherMean = index >= 1 && str.charAt(index-1)!=' ' && index >=2 && str.charAt(index-2)==' ';
+            return !isOtherMean;
+        }
+        return true;
+    }
 }

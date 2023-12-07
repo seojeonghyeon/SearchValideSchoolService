@@ -71,8 +71,6 @@ public class CsvReader {
         String str = line.replaceAll(regex, replacement);
 
         if(isExistTwoDoubleQuotesInOneLine){
-//            String[] lineContents = str
-//                    .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
             this.readCSV.add(str);
             comment.initStringBuffer();
             comment.setFalseExistDoubleQuotes();
@@ -90,18 +88,11 @@ public class CsvReader {
             str = comment.getStringBuffer().toString();
             return;
         }
-//        String[] lineContents = str
-//                .split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
         this.readCSV.add(str);
         comment.initStringBuffer();
     }
 
-//    public String[] nextRead(){
-//        if(readCSV.size() == index){
-//            return null;
-//        }
-//        return readCSV.get(index++);
-//    }
 
     private static boolean hasText(String str){
         return str != null && !str.isEmpty() && containsText(str);
