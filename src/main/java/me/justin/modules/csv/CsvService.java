@@ -1,6 +1,9 @@
 package me.justin.modules.csv;
 
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CsvService {
     private static final String COMMENTS_CSV_FILE_NAME = "target/classes/csv/comments.csv";
     private static final String HIGH_SCHOOL_LIST_FILE_NAME = "target/classes/csv/2023년도_전국고등학교_학교명.csv";
@@ -21,10 +24,12 @@ public class CsvService {
     }
 
     public CsvReader createHighSchoolReader(){
+        log.debug("Processing create High School CSV Reader - File Name: {}", HIGH_SCHOOL_LIST_FILE_NAME);
         return CsvReader.createCsvReader(HIGH_SCHOOL_LIST_FILE_NAME);
     }
 
     public CsvReader createMiddleSchoolReader(){
+        log.debug("Processing create Middle School CSV Reader - File Name: {}", MIDDLE_SCHOOL_LIST_FILE_NAME);
         return CsvReader.createCsvReader(MIDDLE_SCHOOL_LIST_FILE_NAME);
     }
 

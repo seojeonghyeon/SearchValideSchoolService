@@ -1,6 +1,7 @@
 package me.justin.modules.csv;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.comment.Comment;
 
 import java.io.*;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Slf4j
 @Getter @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
 @AllArgsConstructor @Builder
@@ -25,13 +27,14 @@ public class CsvReader {
         try {
             csvReader.addCSVStringList();
         }catch (IOException e){
-            e.printStackTrace();
+            log.error("Failed to process request. Exception: {}", e.getMessage(), e);
         }
         return csvReader;
     }
 
     public void addCSVStringList() throws IOException{
         if(!hasText(fileName)){
+            log.error("Failed to process CSV String list add. No exist file name");
             return;
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.fileName), StandardCharsets.UTF_8));
@@ -39,24 +42,28 @@ public class CsvReader {
 
         if(isSchoolFile){
             addLineContentsAboutSchool(bufferedReader);
+            log.info("School List saved on CSV Reader: {}", this.fileName);
             return;
         }
         addLineContentsAboutComments(bufferedReader);
+        log.info("Comments saved on CSV Reader: {}", this.fileName);
     }
 
     private void addLineContentsAboutSchool(BufferedReader bufferedReader) throws IOException{
-        String line = null;
+        String line;
         while ((line = bufferedReader.readLine()) != null) {
             String replacement = "";
             String regex = fileName.endsWith("고등학교_학교명.csv") ? "등학교" : "학교";
-            String lineContents = line.replaceAll(regex, replacement);
+            String lineContents = line.replaceAll(regex, replacement).replaceAll("[^가-힣]","");
+            log.debug("Processing replace school's name - BEFORE SCHOOL NAME : {}, AFTER SCHOOL NAME : {}",line, lineContents);
             this.readCSV.add(lineContents);
         }
     }
     private void addLineContentsAboutComments(BufferedReader bufferedReader) throws IOException{
         Comment comment = Comment.createComment();
-        String line = null;
+        String line;
         while ((line = bufferedReader.readLine()) != null) {
+            log.debug("Processing replace comment - BEFORE COMMENT : {}",line);
             translateComments(line, comment);
         }
     }
@@ -68,7 +75,7 @@ public class CsvReader {
         boolean isExistTwoDoubleQuotesInOneLine = line.contains("\"") && line.codePoints().filter(ch -> ch == doubleQuotes.codePointAt(0)).count() % 2 == 0;
 
         if(isExistTwoDoubleQuotesInOneLine){
-            regex = "[^가-힣\s]";
+            regex = "[^가-힣 ]";
         }
         String str = line.replaceAll(regex, replacement);
 
@@ -76,6 +83,8 @@ public class CsvReader {
             this.readCSV.add(str);
             comment.initStringBuffer();
             comment.setFalseExistDoubleQuotes();
+            log.debug("Processing replace comment - AFTER COMMENT : {}", str);
+            return;
         }else if(str.contains(doubleQuotes) && !comment.isExistDoubleQuotes()){
             comment.getStringBuffer().append(str);
             comment.setTrueExistDoubleQuotes();
@@ -87,11 +96,11 @@ public class CsvReader {
             comment.initStringBuffer();
         }else if(!str.contains(doubleQuotes) && comment.isExistDoubleQuotes()){
             comment.getStringBuffer().append(str);
-            str = comment.getStringBuffer().toString();
             return;
         }
 
         this.readCSV.add(str);
+        log.debug("Processing replace comment - AFTER COMMENT : {}", str);
         comment.initStringBuffer();
     }
 

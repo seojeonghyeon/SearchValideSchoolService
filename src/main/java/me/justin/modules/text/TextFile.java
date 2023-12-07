@@ -1,12 +1,14 @@
 package me.justin.modules.text;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.school.School;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
@@ -25,7 +27,7 @@ public class TextFile {
 
     private String contents(List<School> schoolList){
         StringBuffer buffer = new StringBuffer();
-        schoolList.forEach(school -> buffer.append(school.toString()+"\n"));
+        schoolList.forEach(school -> buffer.append(school.toString()).append("\n"));
         return buffer.toString();
     }
 
@@ -33,7 +35,7 @@ public class TextFile {
         try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.write(contents);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to process request. Exception: {}", e.getMessage(), e);
         }
     }
 }

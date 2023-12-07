@@ -1,10 +1,12 @@
 package me.justin.modules.school;
 
+import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
 
 import java.util.List;
 
+@Slf4j
 public class SchoolService {
     private final SchoolRepository schoolRepository = SchoolRepository.getInstance();
     private final CsvService csvService = CsvService.getInstance();
@@ -43,10 +45,15 @@ public class SchoolService {
 
         saveSchoolList(highSchoolReader.getReadCSV());
         saveSchoolList(middleSchoolReader.getReadCSV());
+
+        log.info("School List saved on repository: {}", schoolRepository.getClass());
     }
 
     public void saveSchoolList(List<String> schoolList){
-        schoolList.forEach(str -> save(School.createSchool(str)));
+        schoolList.forEach(str -> {
+            log.debug("Processing save school's name - SCHOOL NAME : {}",str);
+            save(School.createSchool(str));
+        });
     }
 
 }

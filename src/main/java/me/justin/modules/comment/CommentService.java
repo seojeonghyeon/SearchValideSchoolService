@@ -1,12 +1,14 @@
 package me.justin.modules.comment;
 
 
+import lombok.extern.slf4j.Slf4j;
 import me.justin.modules.csv.CsvReader;
 import me.justin.modules.csv.CsvService;
 import me.justin.modules.school.School;
 import me.justin.modules.school.SchoolService;
 import java.util.List;
 
+@Slf4j
 public class CommentService {
     private final CsvService csvService = CsvService.getInstance();
     private final SchoolService schoolService = SchoolService.getInstance();
@@ -25,9 +27,16 @@ public class CommentService {
         CsvReader commentReader = csvService.createCommentsReader();
         List<String> commentReaderReadCSV = commentReader.getReadCSV();
         List<School> schoolList = schoolService.findAll();
-        schoolList.forEach(school -> {
-            commentReaderReadCSV.stream().filter(str -> isEqualsToSchoolName(str, school.getName())).forEach(str -> school.addCount());
-        });
+        schoolList.forEach(
+                school -> commentReaderReadCSV
+                        .stream()
+                        .filter(str -> isEqualsToSchoolName(str, school.getName()))
+                        .forEach(str -> {
+                            log.debug("Processing count up by school's name - SCHOOL NAME : {}, COMMENT : {}", school.getName(), str);
+                            school.addCount();
+                        })
+        );
+        log.info("Valid School List was count by school from comments");
     }
 
     public boolean isEqualsToSchoolName(String str, String schoolName){
